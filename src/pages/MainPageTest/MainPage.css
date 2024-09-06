@@ -1,0 +1,287 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App Bar Styles */
+.app-bar {
+  background-color: #333;
+  padding: 10px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.app-bar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.home-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 20px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between nav items */
+  margin-right: 20px; 
+  margin-left: 20px;/* Add some margin to the right to prevent edge-clipping */
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.dropbtn {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  max-height: 400px; /* Limit the height of the dropdown */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.dropdown-content::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+}
+
+.dropdown-content::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker color on hover */
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.calendar-link  {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.settings-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.search-bar {
+  margin-left: 20px;
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: none;
+  width: 200px;
+}
+
+.search-container {
+  flex-grow: 0;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.language-toggle-button-eng {
+  margin-right: 50px;
+}
+
+.toggle-language-button-heb {
+  margin-left: 50px;
+}
+/* Filter Bar Styles */
+.filter-bar-main {
+  background-color: #f4f4f4;
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  margin-top: 60px; /* Adjust to leave space for the fixed App Bar */
+}
+
+/* Tournaments Section Styles */
+.tournaments-section-main {
+  padding: 80px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.tournaments-section-main h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.tournaments-list-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Tournament Card Styles */
+.tournament-card-main {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.tournament-card-main:hover {
+  transform: scale(1.05);
+}
+
+.sport-logo-main {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+.tournament-details-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tournament-details-main h2 {
+  font-size: 0.9rem;
+  margin-top: 20px;
+  color: #007BFF;
+  height: 2.6rem;
+  line-height: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tournament-details-main p {
+  margin: 5px 0;
+  padding: 0 5px;
+}
+
+.tournament-actions-main {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.details-link-main {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.details-link-main:hover {
+  text-decoration: underline;
+}
+
+.customize-link-main {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+/* Calendar and Share Icons */
+.calendar-icon-main, .share-icon-main {
+  cursor: pointer;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #1E90FF;
+  transition: color 0.2s ease-in-out;
+}
+
+.calendar-icon-main:hover, .share-icon-main:hover {
+  color: #007BFF;
+}
+
+.share-container-main {
+  position: relative;
+}
+
+.share-options-main {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  border-radius: 4px;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.share-container-main:hover .share-options-main {
+  display: flex;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .tournament-card-main {
+    width: calc(50% - 20px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .tournament-card-main {
+    width: calc(100% - 20px);
+  }
+}

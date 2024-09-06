@@ -1,0 +1,12 @@
+/* MainPageHebrew.css */
+.hebrew-page {
+    direction: rtl;
+  }
+  
+  .app-bar-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Other RTL-specific styles */
+  

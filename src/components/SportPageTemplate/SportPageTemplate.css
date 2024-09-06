@@ -1,0 +1,310 @@
+/* General Styles */
+.sport-general-page {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+/* App Bar Styles */
+.app-bar-sporttemplate-eng {
+  background-color: #333;
+  padding: 10px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.app-bar-content-sporttemplate-eng {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.home-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 50px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between nav items */
+  margin-right: 20px; /* Add some margin to the right to prevent edge-clipping */
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.dropbtn {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.calendar-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.search-container {
+  flex-grow: 0;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.search-bar-sporttemplate {
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: none;
+  width: 200px;
+  margin-right: 50px;
+}
+
+/* Olympic Qualification Section */
+.qualification-section {
+  display: flex;
+  align-items: center;
+  margin: 60px 0 20px; /* Added margin at the top for separation */
+}
+
+.sport-logo {
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+}
+
+.qualification-content h2 {
+  margin: 0 0 10px;
+  font-size: 1.5rem;
+  color: #007BFF;
+}
+
+/* Distinguished Athletes Section */
+.athletes-section {
+  margin: 20px 0;
+}
+
+.athletes-section h2 {
+  color: #007BFF;
+}
+
+.athletes-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center; /* Center the athlete cards */
+}
+
+.athlete-card {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+  text-align: center;
+  max-width: 250px; /* Set a maximum width for consistency */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.athlete-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #007BFF;
+}
+
+.athlete-card p {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Filter Bar */
+.filter-bar {
+  background-color: #f4f4f4;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+  border: 1px solid #ddd; /* Added border for better visibility */
+}
+
+.filter-options .filter-square {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filter-options .filter-square:hover {
+  background-color: lightblue;
+  color: white;
+  border-color: lightblue;
+}
+
+.filter-options .filter-square.selected {
+  background-color: blue; /* Change to blue when selected */
+  color: white;
+  border-color: blue; /* Ensure the border also matches the blue color */
+}
+
+.show-previous-button {
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Tournaments Section */
+.tournaments-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.tournaments-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.tournament-card {
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.tournament-card:hover {
+  transform: scale(1.05);
+}
+
+.tournament-logo {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+.tournament-details h2 {
+  font-size: 0.9rem;
+  margin-top: 20px;
+  color: #007BFF;
+  height: 2.6rem;
+  line-height: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tournament-details p {
+  margin: 5px 0;
+  padding: 0 5px;
+}
+
+.tournament-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.details-link {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.details-link:hover {
+  text-decoration: underline;
+}
+
+.calendar-icon, .share-icon {
+  cursor: pointer;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #1E90FF;
+  transition: color 0.2s ease-in-out;
+}
+
+.calendar-icon:hover, .share-icon:hover {
+  color: #007BFF;
+}
+
+.share-container {
+  position: relative;
+}
+
+.share-options {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  border-radius: 4px;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.share-container:hover .share-options {
+  display: flex;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .tournament-card {
+    width: calc(50% - 20px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .tournament-card {
+    width: calc(100% - 20px);
+  }
+}
