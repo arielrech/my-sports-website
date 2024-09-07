@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunksports_tournaments_site=self.webpackChunksports_tournaments_site||[]).push([[952],{4952:e=>{e.exports=function(){throw new Error("ws does not work in the browser. Browser clients must use the native WebSocket object")}}}]);
+//# sourceMappingURL=952.056f20b0.chunk.js.map
