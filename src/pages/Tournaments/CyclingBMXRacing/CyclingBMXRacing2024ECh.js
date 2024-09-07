@@ -6,22 +6,23 @@ import sportLogo from '../../../assets/logos/cycling_BMX_racing_logo.png';
 const CyclingBMXRacing2024ECh = () => {
   // Mock participant data for demonstration
   const athletes = [
-    { name: 'Athlete 1', description: 'Description of Athlete 1' },
-    { name: 'Athlete 2', description: 'Description of Athlete 2' },
+    { name: 'אין מידע', description: 'לא השתתפו רוכבים ישראלים' },
     // Add more athletes as needed
   ];
   const generalInfo = (
       <p>
-      'מידע יתווסף בהמשך'
-
+        אליפות אירופה באופני BMX
       </p>
     );
 
     // Results information
     const results = (
       <p>
-      'מידע יתווסף בהמשך'
-    </p>
+      'מקום ראשון גברים: ארתור פילארד'
+      <br/>
+      <br/>
+      'מקום ראשון נשים: זוי קלאסנס'
+      </p>
   );
   return (
     <TournamentPageTemplate 
