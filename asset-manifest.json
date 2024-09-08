@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/my-sports-website/static/css/main.640ef741.css",
-    "main.js": "/my-sports-website/static/js/main.5cd26ef3.js",
+    "main.js": "/my-sports-website/static/js/main.2c391649.js",
     "static/js/952.056f20b0.chunk.js": "/my-sports-website/static/js/952.056f20b0.chunk.js",
     "static/media/icon.png": "/my-sports-website/static/media/icon.c0c831c8d2bf1accf39c.png",
     "static/media/wrestling_logo.png": "/my-sports-website/static/media/wrestling_logo.8d6c391da29f44318459.png",
@@ -48,11 +48,11 @@
     "static/media/sailing_laser_class_logo.png": "/my-sports-website/static/media/sailing_laser_class_logo.e601f4dc200b31e28b0b.png",
     "index.html": "/my-sports-website/index.html",
     "main.640ef741.css.map": "/my-sports-website/static/css/main.640ef741.css.map",
-    "main.5cd26ef3.js.map": "/my-sports-website/static/js/main.5cd26ef3.js.map",
+    "main.2c391649.js.map": "/my-sports-website/static/js/main.2c391649.js.map",
     "952.056f20b0.chunk.js.map": "/my-sports-website/static/js/952.056f20b0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.640ef741.css",
-    "static/js/main.5cd26ef3.js"
+    "static/js/main.2c391649.js"
   ]
 }
