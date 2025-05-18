@@ -6,7 +6,6 @@ import logoicon from '../../assets/icon.png';
 import { TwitterShareButton, FacebookShareButton, EmailShareButton } from 'react-share';
 import { CalendarIcon, ShareIcon } from '@heroicons/react/24/solid';
 
-// Hebrew to English mapping
 const hebrewToEnglishSportMap = {
   'קשתות': 'Archery',
   'התעמלות מכשירים': 'Artistic Gymnastics',
@@ -58,6 +57,7 @@ const SportPageTemplateHebrew = ({ sportName, logo, qualification, athletes }) =
   const [availableTypes, setAvailableTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showPreviousTournaments, setShowPreviousTournaments] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,14 +65,14 @@ const SportPageTemplateHebrew = ({ sportName, logo, qualification, athletes }) =
       const { data, error } = await supabase
         .from('tournaments')
         .select('*')
-        .eq('sport_hebrew', sportName) // Fetch tournaments using the Hebrew sport name
+        .eq('sport_hebrew', sportName)
         .order('date_start', { ascending: true });
 
       if (error) {
         console.error('Error fetching tournaments:', error);
       } else {
         setTournaments(data);
-        const types = [...new Set(data.map(tournament => tournament.type_hebrew))].sort(); // Use Hebrew types
+        const types = [...new Set(data.map(t => t.type_hebrew))].sort();
         setAvailableTypes(types);
       }
     };
@@ -80,7 +80,7 @@ const SportPageTemplateHebrew = ({ sportName, logo, qualification, athletes }) =
     const fetchSports = async () => {
       const { data, error } = await supabase
         .from('tournaments')
-        .select('sport_hebrew'); // Fetch available sports in Hebrew
+        .select('sport_hebrew');
 
       if (error) {
         console.error('Error fetching sports:', error);
@@ -92,16 +92,29 @@ const SportPageTemplateHebrew = ({ sportName, logo, qualification, athletes }) =
 
     fetchTournaments();
     fetchSports();
-  }, [sportName, logo]);
+  }, [sportName]);
+
+  const now = new Date();
+
+  const filteredTournaments = tournaments.filter(t => {
+    const endsInPast = new Date(t.date_end) < now;
+    const endsInFuture = new Date(t.date_end) >= now;
+
+    const timeMatch = showPreviousTournaments ? endsInPast : endsInFuture;
+    const typeMatch = selectedTypes.length === 0 || selectedTypes.includes(t.type_hebrew);
+    const searchMatch = (t.name_hebrew || t.name).toLowerCase().includes(searchQuery.toLowerCase());
+
+    return timeMatch && typeMatch && searchMatch;
+  });
 
   const addToCalendar = (tournament) => {
     const event = {
-      summary: tournament.name_hebrew || tournament.name, // Use Hebrew name if available
+      summary: tournament.name_hebrew || tournament.name,
       location: tournament.location_hebrew || tournament.location,
       description: tournament.type_specific_hebrew || tournament.type_specific,
       start: {
         dateTime: new Date(tournament.date_start).toISOString(),
-        timeZone: 'Asia/Jerusalem', 
+        timeZone: 'Asia/Jerusalem',
       },
       end: {
         dateTime: new Date(tournament.date_end).toISOString(),
@@ -115,17 +128,10 @@ const SportPageTemplateHebrew = ({ sportName, logo, qualification, athletes }) =
   };
 
   const handleTypeToggle = (type) => {
-    setSelectedTypes(prevSelected =>
-      prevSelected.includes(type)
-        ? prevSelected.filter(t => t !== type)
-        : [...prevSelected, type]
+    setSelectedTypes(prev =>
+      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
     );
   };
-
-  const filteredTournaments = tournaments.filter(tournament =>
-    (selectedTypes.length === 0 || selectedTypes.includes(tournament.type_hebrew)) &&
-    (tournament.name_hebrew || tournament.name).toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="sport-general-page" dir="rtl">
@@ -206,48 +212,53 @@ const SportPageTemplateHebrew = ({ sportName, logo, qualification, athletes }) =
               </button>
             ))
           )}
-          </div>
-          <button className="show-previous-button">הצג תחרויות קודמות</button>
-        </section>
-  
-        <section className="tournaments-section">
-          <h1>תחרויות {sportName}</h1>
-          <div className="tournaments-list">
-            {filteredTournaments.map((tournament, index) => (
-              <div key={index} className="tournament-card">
-                <img src={tournament.logo || logo} alt={`${tournament.name_hebrew || tournament.name} Logo`} className="tournament-logo" />
-                <div className="tournament-details">
-                  <h2>{tournament.name_hebrew || tournament.name}</h2>
-                  <p><strong>מיקום:</strong> {tournament.location_hebrew || tournament.location}</p>
-                  <p><strong>ענף:</strong> {tournament.sport_hebrew || tournament.sport}</p>
-                  <p><strong>סוג:</strong> {tournament.type_specific_hebrew || tournament.type_specific}</p>
-                  <p><strong>תאריך:</strong> {new Date(tournament.date_start).toLocaleDateString()} - {new Date(tournament.date_end).toLocaleDateString()}</p>
-                  <div className="tournament-actions">
-                    <CalendarIcon className="calendar-icon" onClick={() => addToCalendar(tournament)} />
-                    <div className="share-container">
-                      <ShareIcon className="share-icon" />
-                      <div className="share-options">
-                        <TwitterShareButton url={`http://localhost:3000/he/tournament/${tournament.id}`}>
-                          <span>Twitter</span>
-                        </TwitterShareButton>
-                        <FacebookShareButton url={`http://localhost:3000/he/tournament/${tournament.id}`}>
-                          <span>Facebook</span>
-                        </FacebookShareButton>
-                        <EmailShareButton url={`http://localhost:3000/he/tournament/${tournament.id}`}>
-                          <span>Email</span>
-                        </EmailShareButton>
-                      </div>
+        </div>
+        <button
+          className="show-previous-button"
+          onClick={() => setShowPreviousTournaments(prev => !prev)}
+        >
+          {showPreviousTournaments ? 'הצג תחרויות עתידיות' : 'הצג תחרויות קודמות'}
+        </button>
+      </section>
+
+      <section className="tournaments-section">
+        <h1>תחרויות {sportName}</h1>
+        <div className="tournaments-list">
+          {filteredTournaments.length === 0 && <p>לא נמצאו תחרויות.</p>}
+          {filteredTournaments.map((tournament, index) => (
+            <div key={index} className="tournament-card">
+              <img src={tournament.logo || logo} alt={`${tournament.name_hebrew || tournament.name} Logo`} className="tournament-logo" />
+              <div className="tournament-details">
+                <h2>{tournament.name_hebrew || tournament.name}</h2>
+                <p><strong>מיקום:</strong> {tournament.location_hebrew || tournament.location}</p>
+                <p><strong>ענף:</strong> {tournament.sport_hebrew || tournament.sport}</p>
+                <p><strong>סוג:</strong> {tournament.type_specific_hebrew || tournament.type_specific}</p>
+                <p><strong>תאריך:</strong> {new Date(tournament.date_start).toLocaleDateString()} - {new Date(tournament.date_end).toLocaleDateString()}</p>
+                <div className="tournament-actions">
+                  <CalendarIcon className="calendar-icon" onClick={() => addToCalendar(tournament)} />
+                  <div className="share-container">
+                    <ShareIcon className="share-icon" />
+                    <div className="share-options">
+                      <TwitterShareButton url={`http://localhost:3000/he/tournament/${tournament.id}`}>
+                        <span>Twitter</span>
+                      </TwitterShareButton>
+                      <FacebookShareButton url={`http://localhost:3000/he/tournament/${tournament.id}`}>
+                        <span>Facebook</span>
+                      </FacebookShareButton>
+                      <EmailShareButton url={`http://localhost:3000/he/tournament/${tournament.id}`}>
+                        <span>Email</span>
+                      </EmailShareButton>
                     </div>
                   </div>
-                  <Link to={`/tournament/${tournament.id}`} className="details-link">צפה בפרטים</Link>
                 </div>
+                <Link to={`/tournament/${tournament.id}`} className="details-link">צפה בפרטים</Link>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
-    );
-  };
-  
-  export default SportPageTemplateHebrew;
-  
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default SportPageTemplateHebrew;
