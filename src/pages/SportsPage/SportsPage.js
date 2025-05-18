@@ -160,7 +160,7 @@ const SportsPage = () => {
               <h1>Select a Sport</h1>
               <div className="grid-sports-general-page-container">
                   {filteredSports.map(sport => (
-                      <Link key={sport} to={`/sport/${sport.toLowerCase()}`} className="sport-general-page-box">
+                     <Link key={sport} to={`/sport/${sport.toLowerCase().replace(/\s+/g, '-')}`} className="sport-general-page-box">
                           <img 
                               src={sportLogos[sport]} 
                               alt={sport} 
