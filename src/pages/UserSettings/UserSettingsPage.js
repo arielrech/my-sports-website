@@ -8,24 +8,43 @@ import { Link } from 'react-router-dom';
 const UserSettingsPage = () => {
   const [availableSports, setAvailableSports] = useState([]);
   const [selectedSports, setSelectedSports] = useState([]);
-  const [language, setLanguage] = useState('English'); // Language state added
+  const [language, setLanguage] = useState('English');
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        navigate('/login'); // Redirect to login if user is not logged in
+        navigate('/login');
       } else {
-        // Fetch user settings if the user is logged in
+        // Try to fetch settings for this user
         const { data: settings, error } = await supabase
           .from('user_settings')
           .select('favorite_sports, language')
           .eq('user_id', user.id)
-          .single();
+          .limit(1)
+          .maybeSingle();
 
         if (error) {
           console.error('Error fetching user settings:', error);
+        }
+
+        if (!settings) {
+          // No settings yet – create a default row
+          const { error: insertError } = await supabase
+            .from('user_settings')
+            .insert({
+              user_id: user.id,
+              favorite_sports: [],
+              language: 'English'
+            });
+
+          if (insertError) {
+            console.error('Error creating default user settings:', insertError);
+          } else {
+            setSelectedSports([]);
+            setLanguage('English');
+          }
         } else {
           setSelectedSports(settings.favorite_sports || []);
           setLanguage(settings.language || 'English');
@@ -46,8 +65,8 @@ const UserSettingsPage = () => {
       }
     };
 
-    checkUser(); // Check if user is logged in
-    fetchSports(); // Fetch available sports
+    checkUser();
+    fetchSports();
   }, [navigate]);
 
   const handleSportToggle = (sport) => {
@@ -59,32 +78,31 @@ const UserSettingsPage = () => {
   };
 
   const handleSaveSettings = async () => {
-    // Retrieve the currently authenticated user
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
     if (userError) {
-        console.error('Error fetching user:', userError);
-        return;
+      console.error('Error fetching user:', userError);
+      return;
     }
 
     try {
-        const { data, error } = await supabase
-            .from('user_settings')
-            .upsert({
-                user_id: user.id,
-                favorite_sports: selectedSports,
-                language,
-            }, {
-                onConflict: 'user_id'
-            });
+      const { data, error } = await supabase
+        .from('user_settings')
+        .upsert({
+          user_id: user.id,
+          favorite_sports: selectedSports,
+          language,
+        }, {
+          onConflict: 'user_id'
+        });
 
-        if (error) {
-            console.error('Error saving user settings:', error);
-        } else {
-            console.log('Settings saved successfully:', data);
-        }
+      if (error) {
+        console.error('Error saving user settings:', error);
+      } else {
+        console.log('Settings saved successfully:', data);
+      }
     } catch (err) {
-        console.error('Unexpected error:', err);
+      console.error('Unexpected error:', err);
     }
   };
 
@@ -93,7 +111,7 @@ const UserSettingsPage = () => {
     if (error) {
       console.error('Error during logout:', error.message);
     } else {
-      navigate('/login'); // Redirect to login page after logout
+      navigate('/login');
     }
   };
 
