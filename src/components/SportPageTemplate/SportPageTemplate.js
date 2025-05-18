@@ -8,26 +8,25 @@ import { CalendarIcon, ShareIcon } from '@heroicons/react/24/solid';
 
 const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
   const [tournaments, setTournaments] = useState([]);
-  const [availableSports, setAvailableSports] = useState([]); // State for sports
-  const [availableTypes, setAvailableTypes] = useState([]); // State for types
-  const [selectedTypes, setSelectedTypes] = useState([]); // State for selected types
-  const [searchQuery, setSearchQuery] = useState(''); // State for search query
+  const [availableSports, setAvailableSports] = useState([]);
+  const [availableTypes, setAvailableTypes] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showPreviousTournaments, setShowPreviousTournaments] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTournaments = async () => {
-      let { data, error } = await supabase
-        .from('tournaments')  // Correct table name
+      const { data, error } = await supabase
+        .from('tournaments')
         .select('*')
-        .eq('sport', sportName)  // Filter by the specific sport
+        .eq('sport', sportName)
         .order('date_start', { ascending: true });
 
       if (error) {
         console.error('Error fetching tournaments:', error);
       } else {
         setTournaments(data);
-
-        // Extract distinct tournament types for the specific sport
         const types = [...new Set(data.map(tournament => tournament.type))].sort();
         setAvailableTypes(types);
       }
@@ -35,21 +34,33 @@ const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
 
     const fetchSports = async () => {
       const { data, error } = await supabase
-        .from('tournaments')  // Query the tournaments table to extract sports
-        .select('sport');  // Select the sport column
+        .from('tournaments')
+        .select('sport');
 
       if (error) {
         console.error('Error fetching sports:', error);
       } else {
-        // Ensure the sport name is defined and not empty before processing
         const validSports = [...new Set(data.map(item => item.sport))].filter(Boolean).sort();
         setAvailableSports(validSports);
       }
     };
 
-    fetchTournaments(); // Fetch the tournaments and related data for the specific sport
-    fetchSports(); // Fetch the sports data from tournaments table
+    fetchTournaments();
+    fetchSports();
   }, [sportName, logo]);
+
+  const now = new Date();
+
+  const filteredTournaments = tournaments.filter(tournament => {
+    const endsInPast = new Date(tournament.date_end) < now;
+    const endsInFutureOrToday = new Date(tournament.date_end) >= now;
+
+    const matchesTime = showPreviousTournaments ? endsInPast : endsInFutureOrToday;
+    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(tournament.type);
+    const matchesSearch = tournament.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesTime && matchesType && matchesSearch;
+  });
 
   const addToCalendar = (tournament) => {
     const event = {
@@ -58,11 +69,11 @@ const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
       description: tournament.type_specific,
       start: {
         dateTime: new Date(tournament.date_start).toISOString(),
-        timeZone: 'America/Los_Angeles', // Adjust timezone as necessary
+        timeZone: 'America/Los_Angeles',
       },
       end: {
         dateTime: new Date(tournament.date_end).toISOString(),
-        timeZone: 'America/Los_Angeles', // Adjust timezone as necessary
+        timeZone: 'America/Los_Angeles',
       },
     };
 
@@ -79,11 +90,6 @@ const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
     );
   };
 
-  const filteredTournaments = tournaments.filter(tournament =>
-    (selectedTypes.length === 0 || selectedTypes.includes(tournament.type)) &&
-    tournament.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
     <div className="sport-general-page">
       {/* App Bar */}
@@ -94,7 +100,6 @@ const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
           </Link>
           <nav className="nav-links">
             <div className="dropdown">
-              {/* Wrap the button in a Link component */}
               <Link to="/sports" className="dropbtn-link">
                 <button className="dropbtn">Sports</button>
               </Link>
@@ -111,12 +116,12 @@ const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
             <Link to="/calendar" className="calendar-link">Calendar</Link>
             <Link to="/user-settings" className="settings-link">Settings</Link>
           </nav>
-          <button 
-  onClick={() => navigate(`/he/sport/${sportName.toLowerCase().replace(/\s+/g, '-')}`)} 
-  className="toggle-language-button"
->
-  עברית
-</button>
+          <button
+            onClick={() => navigate(`/he/sport/${sportName.toLowerCase().replace(/\s+/g, '-')}`)}
+            className="toggle-language-button"
+          >
+            עברית
+          </button>
           <div className="search-container">
             <input
               type="text"
@@ -169,13 +174,21 @@ const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
             ))
           )}
         </div>
-        <button className="show-previous-button">Show Previous Tournaments</button>
+        <button
+          className="show-previous-button"
+          onClick={() => setShowPreviousTournaments(prev => !prev)}
+        >
+          {showPreviousTournaments ? 'Show Upcoming Tournaments' : 'Show Previous Tournaments'}
+        </button>
       </section>
 
       {/* Tournaments Section */}
       <section className="tournaments-section">
         <h1>{sportName} Tournaments</h1>
         <div className="tournaments-list">
+          {filteredTournaments.length === 0 && (
+            <p>No tournaments found.</p>
+          )}
           {filteredTournaments.map((tournament, index) => (
             <div key={index} className="tournament-card">
               <img src={tournament.logo || logo} alt={`${tournament.name} Logo`} className="tournament-logo" />
@@ -183,7 +196,7 @@ const SportPageTemplate = ({ sportName, logo, qualification, athletes }) => {
                 <h2>{tournament.name}</h2>
                 <p><strong>Location:</strong> {tournament.location}</p>
                 <p><strong>Sport:</strong> {tournament.sport}</p>
-                <p><strong>Type:</strong> {tournament.type_specific}</p> {/* Tournament Type */}
+                <p><strong>Type:</strong> {tournament.type_specific}</p>
                 <p><strong>Date:</strong> {new Date(tournament.date_start).toLocaleDateString()} - {new Date(tournament.date_end).toLocaleDateString()}</p>
                 <div className="tournament-actions">
                   <CalendarIcon className="calendar-icon" onClick={() => addToCalendar(tournament)} />
